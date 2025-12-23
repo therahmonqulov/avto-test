@@ -1,0 +1,160 @@
+:root {
+    --bg: #000;
+    --white: #fff;
+    --cr: #2d2d2d;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 600;
+}
+
+.container {
+    width: 90%;
+    margin: auto;
+}
+
+.body {
+    height: 100vh;
+}
+
+.header-container {
+    background-color: var(--cr);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+}
+
+.header_button {
+    display: flex;
+    gap: 10px;
+}
+
+.header_button button {
+    font-size: 16px;
+    outline: none;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 10px;
+}
+
+.header_time {
+    font-size: 25px;
+    color: var(--white);
+}
+
+/* savol-tugma */
+.q_button {
+    padding: 20px 0px;
+    background-color: #f8f8f8;
+    display: flex;
+    justify-content: center;
+}
+
+.q_button_box {
+    padding: 12px 20px;
+    display: flex;
+    gap: 8px;
+    border-radius: 5px;
+    background-color: #ececec;
+}
+
+.q_button_box button {
+    outline: none;
+    font-size: 17px;
+    background-color: #dddddd;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    padding: 3px 10px;
+}
+
+/* question */
+
+
+.question-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.question_box {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.question-text {
+    margin-top: 20px;
+    font-size: 25px;
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.option {
+    padding: 15px;
+    border: 3px solid #ddd;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    position: relative;
+    padding-left: 60px;
+    user-select: none;
+}
+
+.option:hover {
+    background: #f5f5f5;
+    border-color: #bbb;
+}
+
+.option input[type="radio"] {
+    position: absolute;
+    left: 20px;
+    transform: scale(1.8);
+    cursor: pointer;
+}
+
+.option label {
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+}
+
+/* footer */
+.footer {
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    margin-top: 25px;
+    background-color: var(--cr);
+    display: flex;
+    justify-content: center;
+    padding: 20px 0px;
+}
+
+.footer_button {
+    display: flex;
+    gap: 40px;
+}
+
+.footer_button button {
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 5px 20px;
+    font-size: 18px;
+}
