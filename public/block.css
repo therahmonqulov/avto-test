@@ -1,0 +1,17 @@
+body, .question-text, .option, * {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+/* Tugmalar va inputlar uchun belgilashga ruxsat beramiz (kerak bo‘lsa) */
+button, input[type="radio"], .q_button_box button {
+    user-select: none; /* yoki text bo‘lsa auto */
+    -webkit-user-select: none;
+}
+
+/* Agar kerak bo‘lsa, faqat savol matni va variantlarni qattiq cheklash */
+.question-text, .option span {
+    pointer-events: none; /* matnni bosib bo‘lmaydi, lekin radio ishlashi kerak */
+}
