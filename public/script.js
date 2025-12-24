@@ -246,6 +246,7 @@ function finishTest() {
     </div>
     <p><strong class="total">Umumiy savollar: ${questions.length}</strong></p>
     <p><strong class="correct">To'g'ri javoblar: ${correctCount}</strong></p>
+    <button class="restat-button">Qaytatdan</button>
   `;
 
     document.querySelector('.question').style.display = 'none';

@@ -215,6 +215,15 @@
     color: var(--cr);
 }
 
+.restat-button {
+    font-size: 17px;
+    cursor: pointer;
+    margin-top: 5px;
+    border-radius: 10px;
+    border: none;
+    padding: 8px;
+}
+
 /* footer */
 .footer {
     width: 100%;
