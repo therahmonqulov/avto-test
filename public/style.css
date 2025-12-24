@@ -42,6 +42,10 @@
     padding: 6px 10px;
 }
 
+.header_button button:hover {
+    background-color: #d8cbcb;
+}
+
 .header_time {
     font-size: 25px;
     color: var(--white);

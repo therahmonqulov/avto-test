@@ -15,7 +15,7 @@ document.addEventListener('keydown', e => {
     // Ctrl + A, Ctrl + C, Ctrl + S, Ctrl + U, Ctrl + Shift + I, F12 va boshqalar
     if (
         e.ctrlKey && (e.key === 'a' || e.key === 'c' || e.key === 's' || e.key === 'u' || e.key === 'A' || e.key === 'C' || e.key === 'S' || e.key === 'U') ||
-        e.key === 'F12' ||
+        // e.key === 'F12' ||
         (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c'))
     ) {
         e.preventDefault();
