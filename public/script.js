@@ -119,6 +119,11 @@ function renderQuestion() {
         input.value = labels[idx];
         input.checked = userAnswers[currentQuestionIndex] === labels[idx];
 
+        // Agar savol allaqachon javoblangan bo'lsa, radio tugmalarini o'chirib qo'yamiz
+        if (userAnswers[currentQuestionIndex] !== null) {
+            input.disabled = true;
+        }
+
         const span = document.createElement('span');
         span.textContent = `${labels[idx]}. ${text}`;
 
@@ -129,11 +134,13 @@ function renderQuestion() {
         div.append(input, label);
         optionsDiv.appendChild(div);
 
-        // butun option diviga bosilganda ham tanlash
-        div.addEventListener('click', () => {
-            input.checked = true;
-            input.dispatchEvent(new Event('change'));
-        });
+        // butun option diviga bosilganda ham tanlash (faqat javoblanmagan bo'lsa)
+        if (userAnswers[currentQuestionIndex] === null) {
+            div.addEventListener('click', () => {
+                input.checked = true;
+                input.dispatchEvent(new Event('change'));
+            });
+        }
     });
 
     // Barcha variantlarga rang berish (to'g'ri → yashil, xato → qizil, tanlanmagan → standart)
@@ -158,18 +165,20 @@ function renderQuestion() {
                 opt.style.borderLeft = '5px solid #dc3545';
             }
         } else if (userAnswers[currentQuestionIndex] && isCorrect) {
-            // Agar savol javoblangan bo'lsa va bu to'g'ri variant bo'lsa (lekin tanlanmagan bo'lsa ham ko'rsatish)
+            // Agar savol javoblangan bo'lsa va bu to'g'ri variant bo'lsa
             opt.style.backgroundColor = '#d4edda';
             opt.style.borderLeft = '5px solid #28a745';
         }
     });
 
-    // Radio o'zgarganda yangi rang berish
+    // Radio o'zgarganda (faqat bir marta ruxsat beramiz)
     document.querySelectorAll('input[name="answer"]').forEach(radio => {
         radio.addEventListener('change', e => {
-            userAnswers[currentQuestionIndex] = e.target.value;
-            updateQuestionButtonStatus(currentQuestionIndex);
-            renderQuestion(); // Variantlar rangini yangilash uchun qayta render qilamiz
+            if (userAnswers[currentQuestionIndex] === null) {
+                userAnswers[currentQuestionIndex] = e.target.value;
+                updateQuestionButtonStatus(currentQuestionIndex);
+                renderQuestion(); // Ranglarni va disabled holatni yangilash uchun
+            }
         });
     });
 
