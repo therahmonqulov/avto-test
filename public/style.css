@@ -134,6 +134,22 @@
     font-size: 18px;
 }
 
+/* result */
+.result-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ddd;
+}
+
+.result {
+    text-align: center;
+}
+
+.result h2 {
+    font-size: 50px !important;
+}
+
 /* footer */
 .footer {
     width: 100%;
