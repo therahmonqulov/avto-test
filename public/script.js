@@ -47,7 +47,6 @@ async function fetchQuestions() {
         renderQuestion();
     } catch (error) {
         console.error('Ma\'lumotlarni olishda xato:', error);
-        alert('Savollarni yuklashda xato yuz berdi. Sheets ID va ulanishni tekshiring.');
     }
 }
 
@@ -97,7 +96,7 @@ function renderQuestion() {
     // Rasm
     const imageContainer = document.getElementById('image-container');
     imageContainer.innerHTML = q.imageUrl
-        ? `<img src="${q.imageUrl}" alt="Savol rasmi" style="max-width: 100%; margin: 15px 0; border-radius: 8px;">`
+        ? `<img src="${q.imageUrl}" alt="Savol rasmi">`
         : '';
 
     // Variantlar
@@ -186,12 +185,12 @@ document.querySelector('.footer_button button:last-child').addEventListener('cli
         currentQuestionIndex++;
         renderQuestion();
     } else {
-        finishTest();
+        checkUnansweredAndFinish();
     }
 });
 
 // Headerdagi "Yakunlash"
-document.querySelector('.header_button button:last-child').addEventListener('click', finishTest);
+document.querySelector('.header_button button:last-child').addEventListener('click', checkUnansweredAndFinish);
 
 // Fullscreen
 document.querySelector('.header_button button:first-child').addEventListener('click', () => {
@@ -201,6 +200,31 @@ document.querySelector('.header_button button:first-child').addEventListener('cl
         document.exitFullscreen();
     }
 });
+
+// Javobsiz savollarni tekshirish va yakunlash
+function checkUnansweredAndFinish() {
+    const unanswered = userAnswers.filter(answer => answer === null).length;
+    if (unanswered > 0) {
+        showWarningModal();
+    } else {
+        finishTest();
+    }
+}
+
+// Ogohlantirish modalini ko'rsatish
+function showWarningModal() {
+    const modal = document.getElementById('warning-modal');
+    modal.style.display = 'flex';
+
+    document.getElementById('cancel-finish').addEventListener('click', () => {
+        modal.style.display = 'none';
+    }, { once: true });
+
+    document.getElementById('confirm-finish').addEventListener('click', () => {
+        modal.style.display = 'none';
+        finishTest();
+    }, { once: true });
+}
 
 // Testni yakunlash
 function finishTest() {
@@ -213,16 +237,21 @@ function finishTest() {
 
     const percentage = Math.round((correctCount / questions.length) * 100);
 
+    const progress = (percentage / 100) * 360;
+
     document.querySelector('.result').innerHTML = `
-    <h2>Test yakunlandi</h2>
-    <p><strong>To'g'ri javoblar:</strong> ${correctCount} / ${questions.length}</p>
-    <p><strong>Natija:</strong> ${percentage}%</p>
+    <h2>Test Yakunlandi</h2>
+    <div class="progress-circle" style="--progress: ${progress}deg;">
+        <div class="progress-value">${percentage}%</div>
+    </div>
+    <p><strong class="total">Umumiy savollar: ${questions.length}</strong></p>
+    <p><strong class="correct">To'g'ri javoblar: ${correctCount}</strong></p>
   `;
 
     document.querySelector('.question').style.display = 'none';
     document.querySelector('.footer').style.display = 'none';
     document.querySelector('.q_button').style.display = 'none';
-    document.querySelector('.result').style.display = 'block';
+    document.querySelector('.result-box').style.display = 'flex';
 }
 
 // Dasturni ishga tushirish
