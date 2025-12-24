@@ -132,18 +132,44 @@ function renderQuestion() {
         // butun option diviga bosilganda ham tanlash
         div.addEventListener('click', () => {
             input.checked = true;
-            // event dispatching kerak bo‘lishi mumkin ba'zi brauzerlarda
             input.dispatchEvent(new Event('change'));
-            userAnswers[currentQuestionIndex] = input.value;
-            updateQuestionButtonStatus(currentQuestionIndex);
         });
     });
 
-    // Radio eventlari
+    // Barcha variantlarga rang berish (to'g'ri → yashil, xato → qizil, tanlanmagan → standart)
+    document.querySelectorAll('.option').forEach(opt => {
+        const radio = opt.querySelector('input[type="radio"]');
+        if (!radio) return;
+
+        const value = radio.value;
+        const isSelected = radio.checked;
+        const isCorrect = value === q.correct;
+
+        // Fon va border ni tozalash
+        opt.style.backgroundColor = '';
+        opt.style.borderLeft = '';
+
+        if (isSelected) {
+            if (isCorrect) {
+                opt.style.backgroundColor = '#d4edda';  // och yashil
+                opt.style.borderLeft = '5px solid #28a745';
+            } else {
+                opt.style.backgroundColor = '#f8d7da';  // och qizil
+                opt.style.borderLeft = '5px solid #dc3545';
+            }
+        } else if (userAnswers[currentQuestionIndex] && isCorrect) {
+            // Agar savol javoblangan bo'lsa va bu to'g'ri variant bo'lsa (lekin tanlanmagan bo'lsa ham ko'rsatish)
+            opt.style.backgroundColor = '#d4edda';
+            opt.style.borderLeft = '5px solid #28a745';
+        }
+    });
+
+    // Radio o'zgarganda yangi rang berish
     document.querySelectorAll('input[name="answer"]').forEach(radio => {
         radio.addEventListener('change', e => {
             userAnswers[currentQuestionIndex] = e.target.value;
             updateQuestionButtonStatus(currentQuestionIndex);
+            renderQuestion(); // Variantlar rangini yangilash uchun qayta render qilamiz
         });
     });
 
@@ -162,13 +188,24 @@ function updateQuestionButtonStatus(index) {
     const buttons = document.querySelectorAll('.q_button_box button');
     const btn = buttons[index];
 
-    if (userAnswers[index]) {
-        btn.style.color = "#fff"
-        btn.style.backgroundColor = '#142c45ff';
-        btn.style.borderColor = '#28a745';
-    } else {
+    if (userAnswers[index] === null) {
+        // Belgilanmagan
         btn.style.backgroundColor = '';
         btn.style.borderColor = '';
+        btn.style.color = '';
+    } else {
+        const q = questions[index];
+        const isCorrect = userAnswers[index] === q.correct;
+
+        if (isCorrect) {
+            btn.style.backgroundColor = '#28a745';  // yashil
+            btn.style.borderColor = '#28a745';
+            btn.style.color = '#fff';
+        } else {
+            btn.style.backgroundColor = '#dc3545';  // qizil
+            btn.style.borderColor = '#dc3545';
+            btn.style.color = '#fff';
+        }
     }
 }
 
@@ -253,6 +290,37 @@ function finishTest() {
     document.querySelector('.footer').style.display = 'none';
     document.querySelector('.q_button').style.display = 'none';
     document.querySelector('.result-box').style.display = 'flex';
+
+    // Qaytatdan boshlash tugmasi
+    document.querySelector('.restat-button').addEventListener('click', restartTest);
+}
+
+// Testni qaytadan boshlash
+function restartTest() {
+    // Taymerni to'xtatish va yangi boshlash
+    clearInterval(timerInterval);
+    timeLeft = 60 * 60;
+
+    // Javoblarni tozalash
+    userAnswers = new Array(questions.length).fill(null);
+    currentQuestionIndex = 0;
+
+    // UI ni tiklash
+    document.querySelector('.question').style.display = '';
+    document.querySelector('.footer').style.display = '';
+    document.querySelector('.q_button').style.display = '';
+    document.querySelector('.result-box').style.display = 'none';
+
+    // Tugmalar rangini tozalash
+    document.querySelectorAll('.q_button_box button').forEach(btn => {
+        btn.style.backgroundColor = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+    });
+
+    // Taymer va savolni qayta ishga tushirish
+    startTimer();
+    renderQuestion();
 }
 
 // Dasturni ishga tushirish
