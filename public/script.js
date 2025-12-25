@@ -160,14 +160,14 @@ function renderQuestion() {
 
         if (isSelected) {
             if (isCorrect) {
-                opt.style.backgroundColor = '#d4edda';
+                opt.style.backgroundColor = '#00ff3cbc';
                 opt.style.borderLeft = '5px solid #28a745';
             } else {
-                opt.style.backgroundColor = '#f8d7da';
-                opt.style.borderLeft = '5px solid #dc3545';
+                opt.style.backgroundColor = '#fd2739ff';
+                opt.style.borderLeft = '5px solid #c50014ff';
             }
         } else if (userAnswers[currentQuestionIndex] && isCorrect) {
-            opt.style.backgroundColor = '#d4edda';
+            opt.style.backgroundColor = '#00ff3cbc';
             opt.style.borderLeft = '5px solid #28a745';
         }
     });
