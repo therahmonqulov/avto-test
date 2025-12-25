@@ -61,6 +61,14 @@ function generateQuestionButtons() {
         btn.dataset.index = i;
 
         btn.addEventListener('click', () => {
+            // Clear border from all buttons
+            document.querySelectorAll('.q_button_box button').forEach(b => {
+                b.style.border = '';
+            });
+            
+            // Add border to clicked button
+            btn.style.border = '1px solid #2d2d2d';
+            
             currentQuestionIndex = i;
             renderQuestion();
         });
