@@ -1,4 +1,4 @@
-const SHEET_ID = '1PDYXWqQlHFQjsDTUdSPS5qYy55OSOh3iWQ5yFVM4P0k'; // googel sheets id URL dagi
+const SHEET_ID = '1PDYXWqQlHFQjsDTUdSPS5qYy55OSOh3iWQ5yFVM4P0k'; // googel sheets id URL dagi 
 const SHEET_NAME = 'Sheet1';
 
 let questions = [];
@@ -6,6 +6,14 @@ let currentQuestionIndex = 0;
 let userAnswers = [];
 let timerInterval;
 let timeLeft = 60 * 60; // 60 daqiqa (sekundlarda)
+
+// Active border yangilash funksiyasi
+function updateActiveQuestionButton() {
+    const buttons = document.querySelectorAll('.q_button_box button');
+    buttons.forEach(b => b.style.border = '');
+    const activeBtn = buttons[currentQuestionIndex];
+    if (activeBtn) activeBtn.style.border = '1px solid #2d2d2d';
+}
 
 // Google Sheets dan ma'lumotlarni olish
 async function fetchQuestions() {
@@ -33,10 +41,9 @@ async function fetchQuestions() {
             };
         });
 
-        // Rasm URL ni tozalash/tuzatish (agar kerak bo'lsa)
         questions.forEach(q => {
             if (q.imageUrl && !q.imageUrl.includes('http')) {
-                q.imageUrl = ''; // noto'g'ri URL bo'lsa bo'shatamiz
+                q.imageUrl = '';
             }
         });
 
@@ -61,20 +68,15 @@ function generateQuestionButtons() {
         btn.dataset.index = i;
 
         btn.addEventListener('click', () => {
-            // Clear border from all buttons
-            document.querySelectorAll('.q_button_box button').forEach(b => {
-                b.style.border = '';
-            });
-            
-            // Add border to clicked button
-            btn.style.border = '1px solid #2d2d2d';
-            
             currentQuestionIndex = i;
             renderQuestion();
+            updateActiveQuestionButton();
         });
 
         qBox.appendChild(btn);
     });
+
+    updateActiveQuestionButton();
 }
 
 // Taymer
@@ -98,22 +100,18 @@ function startTimer() {
 function renderQuestion() {
     const q = questions[currentQuestionIndex];
 
-    // Savol matni
     document.querySelector('.question-text').innerHTML = q.text || 'Savol matni mavjud emas';
 
-    // Rasm
     const imageContainer = document.getElementById('image-container');
     imageContainer.innerHTML = q.imageUrl
         ? `<img src="${q.imageUrl}" alt="Savol rasmi">`
         : '';
 
-    // Variantlar
     const optionsDiv = document.getElementById('options');
     optionsDiv.innerHTML = '';
 
     const labels = ['A', 'B', 'C', 'D'];
 
-    // Variantlar-tanlash
     q.options.forEach((text, idx) => {
         if (!text.trim()) return;
 
@@ -127,7 +125,6 @@ function renderQuestion() {
         input.value = labels[idx];
         input.checked = userAnswers[currentQuestionIndex] === labels[idx];
 
-        // Agar savol allaqachon javoblangan bo'lsa, radio tugmalarini o'chirib qo'yamiz
         if (userAnswers[currentQuestionIndex] !== null) {
             input.disabled = true;
         }
@@ -142,7 +139,6 @@ function renderQuestion() {
         div.append(input, label);
         optionsDiv.appendChild(div);
 
-        // butun option diviga bosilganda ham tanlash (faqat javoblanmagan bo'lsa)
         if (userAnswers[currentQuestionIndex] === null) {
             div.addEventListener('click', () => {
                 input.checked = true;
@@ -151,7 +147,6 @@ function renderQuestion() {
         }
     });
 
-    // Barcha variantlarga rang berish (to'g'ri → yashil, xato → qizil, tanlanmagan → standart)
     document.querySelectorAll('.option').forEach(opt => {
         const radio = opt.querySelector('input[type="radio"]');
         if (!radio) return;
@@ -160,37 +155,33 @@ function renderQuestion() {
         const isSelected = radio.checked;
         const isCorrect = value === q.correct;
 
-        // Fon va border ni tozalash
         opt.style.backgroundColor = '';
         opt.style.borderLeft = '';
 
         if (isSelected) {
             if (isCorrect) {
-                opt.style.backgroundColor = '#d4edda';  // och yashil
+                opt.style.backgroundColor = '#d4edda';
                 opt.style.borderLeft = '5px solid #28a745';
             } else {
-                opt.style.backgroundColor = '#f8d7da';  // och qizil
+                opt.style.backgroundColor = '#f8d7da';
                 opt.style.borderLeft = '5px solid #dc3545';
             }
         } else if (userAnswers[currentQuestionIndex] && isCorrect) {
-            // Agar savol javoblangan bo'lsa va bu to'g'ri variant bo'lsa
             opt.style.backgroundColor = '#d4edda';
             opt.style.borderLeft = '5px solid #28a745';
         }
     });
 
-    // Radio o'zgarganda (faqat bir marta ruxsat beramiz)
     document.querySelectorAll('input[name="answer"]').forEach(radio => {
         radio.addEventListener('change', e => {
             if (userAnswers[currentQuestionIndex] === null) {
                 userAnswers[currentQuestionIndex] = e.target.value;
                 updateQuestionButtonStatus(currentQuestionIndex);
-                renderQuestion(); // Ranglarni va disabled holatni yangilash uchun
+                renderQuestion();
             }
         });
     });
 
-    // Footer tugmalari holati
     const prevBtn = document.querySelector('.footer_button button:first-child');
     const nextBtn = document.querySelector('.footer_button button:last-child');
 
@@ -198,6 +189,7 @@ function renderQuestion() {
     nextBtn.textContent = currentQuestionIndex === questions.length - 1 ? 'Yakunlash' : 'Keyingi';
 
     updateQuestionButtonStatus(currentQuestionIndex);
+    updateActiveQuestionButton();
 }
 
 // Tanlangan savol tugmasini belgilash
@@ -206,7 +198,6 @@ function updateQuestionButtonStatus(index) {
     const btn = buttons[index];
 
     if (userAnswers[index] === null) {
-        // Belgilanmagan
         btn.style.backgroundColor = '';
         btn.style.borderColor = '';
         btn.style.color = '';
@@ -215,11 +206,11 @@ function updateQuestionButtonStatus(index) {
         const isCorrect = userAnswers[index] === q.correct;
 
         if (isCorrect) {
-            btn.style.backgroundColor = '#28a745';  // yashil
+            btn.style.backgroundColor = '#28a745';
             btn.style.borderColor = '#28a745';
             btn.style.color = '#fff';
         } else {
-            btn.style.backgroundColor = '#dc3545';  // qizil
+            btn.style.backgroundColor = '#dc3545';
             btn.style.borderColor = '#dc3545';
             btn.style.color = '#fff';
         }
@@ -231,6 +222,7 @@ document.querySelector('.footer_button button:first-child').addEventListener('cl
     if (currentQuestionIndex > 0) {
         currentQuestionIndex--;
         renderQuestion();
+        updateActiveQuestionButton();
     }
 });
 
@@ -238,6 +230,7 @@ document.querySelector('.footer_button button:last-child').addEventListener('cli
     if (currentQuestionIndex < questions.length - 1) {
         currentQuestionIndex++;
         renderQuestion();
+        updateActiveQuestionButton();
     } else {
         checkUnansweredAndFinish();
     }
@@ -290,7 +283,6 @@ function finishTest() {
     });
 
     const percentage = Math.round((correctCount / questions.length) * 100);
-
     const progress = (percentage / 100) * 360;
 
     document.querySelector('.result').innerHTML = `
@@ -308,34 +300,28 @@ function finishTest() {
     document.querySelector('.q_button').style.display = 'none';
     document.querySelector('.result-box').style.display = 'flex';
 
-    // Qaytatdan boshlash tugmasi
     document.querySelector('.restat-button').addEventListener('click', restartTest);
 }
 
 // Testni qaytadan boshlash
 function restartTest() {
-    // Taymerni to'xtatish va yangi boshlash
     clearInterval(timerInterval);
     timeLeft = 60 * 60;
 
-    // Javoblarni tozalash
     userAnswers = new Array(questions.length).fill(null);
     currentQuestionIndex = 0;
 
-    // UI ni tiklash
     document.querySelector('.question').style.display = '';
     document.querySelector('.footer').style.display = '';
     document.querySelector('.q_button').style.display = '';
     document.querySelector('.result-box').style.display = 'none';
 
-    // Tugmalar rangini tozalash
     document.querySelectorAll('.q_button_box button').forEach(btn => {
         btn.style.backgroundColor = '';
         btn.style.borderColor = '';
         btn.style.color = '';
     });
 
-    // Taymer va savolni qayta ishga tushirish
     startTimer();
     renderQuestion();
 }
