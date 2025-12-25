@@ -160,10 +160,10 @@ function renderQuestion() {
 
         if (isSelected) {
             if (isCorrect) {
-                opt.style.backgroundColor = '#00ff3cbc';
+                opt.style.backgroundColor = '#00ff3cb1';
                 opt.style.borderLeft = '5px solid #28a745';
             } else {
-                opt.style.backgroundColor = '#fd2739ff';
+                opt.style.backgroundColor = '#fd2739e2';
                 opt.style.borderLeft = '5px solid #c50014ff';
             }
         } else if (userAnswers[currentQuestionIndex] && isCorrect) {
@@ -290,8 +290,8 @@ function finishTest() {
     <div class="progress-circle" style="--progress: ${progress}deg;">
         <div class="progress-value">${percentage}%</div>
     </div>
-    <p><strong class="total">Umumiy savollar: ${questions.length}</strong></p>
     <p><strong class="correct">To'g'ri javoblar: ${correctCount}</strong></p>
+    <p><strong class="total">Umumiy savollar: ${questions.length}</strong></p>
     <button class="restat-button">Qaytatdan</button>
   `;
 
