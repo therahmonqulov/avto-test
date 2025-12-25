@@ -7,14 +7,6 @@ let userAnswers = [];
 let timerInterval;
 let timeLeft = 60 * 60; // 60 daqiqa (sekundlarda)
 
-// Active border yangilash funksiyasi
-function updateActiveQuestionButton() {
-    const buttons = document.querySelectorAll('.q_button_box button');
-    buttons.forEach(b => b.style.border = '');
-    const activeBtn = buttons[currentQuestionIndex];
-    if (activeBtn) activeBtn.style.border = '1px solid #2d2d2d';
-}
-
 // Google Sheets dan ma'lumotlarni olish
 async function fetchQuestions() {
     try {
@@ -77,6 +69,14 @@ function generateQuestionButtons() {
     });
 
     updateActiveQuestionButton();
+}
+
+// Active border yangilash funksiyasi
+function updateActiveQuestionButton() {
+    const buttons = document.querySelectorAll('.q_button_box button');
+    buttons.forEach(b => b.style.border = '');
+    const activeBtn = buttons[currentQuestionIndex];
+    if (activeBtn) activeBtn.style.border = '1px solid #2d2d2d';
 }
 
 // Taymer
