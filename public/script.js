@@ -76,7 +76,7 @@ function updateActiveQuestionButton() {
     const buttons = document.querySelectorAll('.q_button_box button');
     buttons.forEach(b => b.style.border = '');
     const activeBtn = buttons[currentQuestionIndex];
-    if (activeBtn) activeBtn.style.border = '1px solid #2d2d2d';
+    if (activeBtn) activeBtn.style.border = '1px solid #737272ff';
 }
 
 // Taymer
